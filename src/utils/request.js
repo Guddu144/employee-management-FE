@@ -1,4 +1,16 @@
-import { removeEmpty } from '../utils';
+export const getTokenFromCookies = () => {
+  const cookieString = document.cookie;
+  const cookies = cookieString.split('; ');
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split('=');
+    if (name === 'token') {
+      return value;
+    }
+  }
+  return null;
+};
+
+
 
 const request = async (method, url, includeAuth, params = {}) => {
   const req = {
@@ -9,21 +21,21 @@ const request = async (method, url, includeAuth, params = {}) => {
   };
 
   if (includeAuth) {
-    req.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    const token = getTokenFromCookies();
+    req.headers.Authorization = `Bearer ${token}`;
     req.headers={
       ...req.headers,
-      'x-user':localStorage.getItem('roleId'),
     }
   }
 
   if (method === 'GET') {
-    const getParams = new URLSearchParams(removeEmpty(params));
+    const getParams = new URLSearchParams((params));
     url += `?${getParams}`;
   } else if (params instanceof FormData) {
     req.body = params;
   } else {
     req.headers['Content-Type'] = 'application/json';
-    req.body = JSON.stringify(removeEmpty(params));
+    req.body = JSON.stringify((params));
   }
 
   const res = await fetch(url, req);

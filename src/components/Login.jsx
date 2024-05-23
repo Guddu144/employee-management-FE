@@ -1,13 +1,26 @@
 import { useForm } from "react-hook-form";
-// import { Link } from "react-router-dom";
+import { login } from "../utils/apiClient";
+import { useNavigate } from "react-router-dom";
 
-const Login2 = () => {
-  
+const Login = () => {
+  function deleteCookie(name) {
+    document.cookie = name + '=; Max-Age=0; path=/';
+  }
+  deleteCookie('token');
+  localStorage.clear();
+
   const { handleSubmit,register,setError} = useForm();
+  const navigate = useNavigate(); 
+
 
 
   const onSubmit = () => (payload) => {
-    console.log(payload)
+    login(payload)
+    .then((data)=>{
+      document.cookie = `token=${data.token}; path=/`;
+      localStorage.setItem('user',JSON.stringify(data.user))
+      navigate('/dashboard');
+    })
     
   };
 
@@ -53,4 +66,4 @@ const Login2 = () => {
   );
 };
 
-export default Login2;
+export default Login;
