@@ -53,6 +53,7 @@ const AddEmployee = () => {
                     <input 
                       id="title"
                       type="text"
+                      disabled={user?.role==="EMPLOYEE" }
                       {...register('title', {
                         required:
                           'please provide your title',
@@ -65,6 +66,7 @@ const AddEmployee = () => {
                     <label className="text-sm font-medium leading-none pr-4 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Yearly salary</label>
                     <input 
                       id="yearly_salary"
+                      disabled={user?.role==="EMPLOYEE" }
                       type="number"
                       {...register('yearly_salary', {
                         required:
